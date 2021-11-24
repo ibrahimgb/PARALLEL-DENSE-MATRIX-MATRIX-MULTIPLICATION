@@ -71,3 +71,8 @@ in parallel.The code is in c using the pthread library.
 | column -wise distr     	|      	|      	|      	|      	|      	|      	|      	|      	|      	|      	|
 | 2D- decomp (Fig. 2(a)  	|      	|      	|      	|      	|      	|      	|      	|      	|      	|      	|
 | 2D- decomp (Fig. 1(b)) 	|      	|      	|      	|      	|      	|      	|      	|      	|      	|      	|
+
+
+# 5 Decomposition of dense matrix-matrix multiplication:
+
+![sc](https://user-images.githubusercontent.com/59414164/143321476-008eee95-6e0d-49ac-9197-47bb86835a00.png)
