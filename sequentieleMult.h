@@ -1,5 +1,10 @@
 #ifndef SEQUENTIELEMULT_H_
 #define SEQUENTIELEMULT_H_
 
-void sequentieleMult (int **A , int **B , int **C , int matrixSize);
+extern	int **A;
+extern	int **B;
+extern  int matrixSize;
+
+void sequentieleMult ( int **C );
+
 #endif

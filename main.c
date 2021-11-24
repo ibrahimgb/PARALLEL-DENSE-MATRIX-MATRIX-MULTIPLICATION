@@ -12,7 +12,6 @@
 #include "generateRandomMatrix.h"
 #include "printMatrix.h"
 #include "freeUpSpace.h"
-#include "thread.h"
 #include "paralelleMult.h"
 
 
@@ -23,10 +22,11 @@ int **C;
 int **check;
 int matrixSize;
 
+
 void checking(){
-  int c, d ;
-  bool isCorect = true; 
-	sequentieleMult(A, B, check, matrixSize);
+    int c, d ;
+    bool isCorect = true; 
+	sequentieleMult( check );
      
      
     for (c = 0; c < matrixSize; c++)   
@@ -44,9 +44,13 @@ void checking(){
 	}else{
 		printf("the result is false\n");
 	}
+
+	//printMatrix(check, matrixSize);
      
 	
 }
+
+
 
 
 int main(int argc, char **argv)
@@ -54,6 +58,9 @@ int main(int argc, char **argv)
 
 	double elapsed_time;
 	srand(time(0));
+	clock_t start_time;
+	clock_t end_time;
+
 
 	
 
@@ -82,32 +89,29 @@ int main(int argc, char **argv)
 												4 : désigne la décomposition par bloc correspondant à la fig. 2(b)*/
 
 		isParalelle = true;
-	}
-	else
-	{
 
-		printf("errer input for sequential version 'S' and for the parallel version 'P' ");
-		return 0;
-	}
-	if (matrixSize < 0 || matrixSize > 5000)
-	{
+	}	else{
+			printf("errer input for sequential version 'S' and for the parallel version 'P' ");
+			return 0;
+		}
+
+
+	//checking for the user input	
+	if (matrixSize < 0 || matrixSize > 5000){
 		printf("please type the correct input for the dimension of the dies 'betwen 1 and 5000 ");
 		return 0;
 	}
-	if (numberOfTreds < 0 || numberOfTreds > 64)
-	{
+
+	if (numberOfTreds < 0 || numberOfTreds > 64){
 		printf("please type the correct threds number");
 		return 0;
 	}
-	if (numberOfTreds > matrixSize)
-	{
+	if (numberOfTreds > matrixSize){
 		printf("the number of threads cannot accede matrix size");
 		return 0;
 	}
 	printf("Matrix size = %d\n", matrixSize);
-	/*if(isParalelle){
-		printf("the threds number is : %s \n", argv[3]);
-	}*/
+	
 
 	/*Allocation et initialisation des matrices*/
 	A = (int **)malloc(matrixSize * sizeof(int *));
@@ -139,16 +143,10 @@ int main(int argc, char **argv)
 	check = (int **)malloc(matrixSize * sizeof(int *));
 	for (int i = 0; i < matrixSize; i++)
 	{
-		C[i] = (int *)malloc(matrixSize * sizeof(int));
+		check[i] = (int *)malloc(matrixSize * sizeof(int));
 	}
 
-	//printf("Address of a: %p\n", &A);
-	//printf("Address of b: %p\n", &B);
-
-	printf("\n");
-
-	printf("%d\n", isParalelle);
-
+	//executing the parallel version
 	if (isParalelle)
 	{
 		printf(" it is paralelle\n");
@@ -156,57 +154,66 @@ int main(int argc, char **argv)
 		printf("\n");
 		printf("result in the paralelle calcul is :- \n");
 		
-		clock_t start_time;
 		
-		clock_t end_time;
-
-		
-		if(paralleleVersion=1){
+		if(paralleleVersion==1){
+			printf("row wise version\n");
 			start_time = clock();
 			paralelleMult1( numberOfTreds);
 			end_time = clock();
+
+			
 		}
-		if(paralleleVersion=2){
+		if(paralleleVersion==2){
+			printf("clomun wise version\n");
 			start_time = clock();
 			paralelleMult2( numberOfTreds);
 			end_time = clock();
 		}
 		
-		/*if(paralleleVersion=3){
+		if(paralleleVersion=3){
+			printf("Décomposition bi-dimensionnelle version\n");
 			start_time = clock();
-			paralelleMult3( A , B , C , matrixSize);
+			paralelleMult2( numberOfTreds);
 			end_time = clock();
 		}
 		if(paralleleVersion=4){
+			printf("Décomposition bi-dimensionnelle version\n");
 			start_time = clock();
-			paralelleMult4( A , B , C , matrixSize);
+			paralelleMult2( numberOfTreds);
 			end_time = clock();
-		}*/
+		}
+
+		printMatrix(C, matrixSize);
 
 		elapsed_time = (double)(end_time - start_time)/CLOCKS_PER_SEC;
 		printf("Total time taken by CPU: %f\n", (double)elapsed_time);
-		//printMatrix(C, matrixSize);
+		
 	}
+
+	//executing the seriale version
 	if (!isParalelle)
 	{
 		printf("\n");
 		printf("result in the seriale calcul is :- \n");
 
-		clock_t start_time = clock();
-		sequentieleMult(A, B, C, matrixSize);
-		clock_t end_time = clock();
+		start_time = clock();
+		sequentieleMult( C );
+		printf("the resolt is ....");
+		end_time = clock();
 
 
 		printMatrix(C, matrixSize);
-
+		
+		printf("CPU CLOCKS_PER_SEC: %f\n", (double)CLOCKS_PER_SEC);
 		elapsed_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
 		printf("Total time taken by CPU: %f\n", (double)elapsed_time);
 
 	}
 
+	//verifying if the result is correct
+	checking();
 
-	//checking();
-
+	//freeing up the located space
 	freeUpSpace(A, matrixSize);
 	freeUpSpace(B, matrixSize);
 	freeUpSpace(C, matrixSize);
