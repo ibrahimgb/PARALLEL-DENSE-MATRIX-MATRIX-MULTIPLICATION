@@ -13,6 +13,7 @@
 #include "printMatrix.h"
 #include "freeUpSpace.h"
 #include "paralelleMult.h"
+#include "cheking.h"
 
 
 
@@ -21,35 +22,6 @@ int **B;
 int **C;
 int **check;
 int matrixSize;
-
-
-void checking(){
-    int c, d ;
-    bool isCorect = true; 
-	sequentieleMult( check );
-     
-     
-    for (c = 0; c < matrixSize; c++)   
-    {  
-        for (d = 0; d < matrixSize; d++)   
-        { 
-            if((C[c][d] != check[c][d]) ){
-				isCorect = false;
-				break;
-			}  
-        }     
-    }  
-	if(isCorect){
-		printf("the result is correct\n");
-	}else{
-		printf("the result is false\n");
-	}
-
-	//printMatrix(check, matrixSize);
-     
-	
-}
-
 
 
 
@@ -170,13 +142,13 @@ int main(int argc, char **argv)
 			end_time = clock();
 		}
 		
-		if(paralleleVersion=3){
+		if(paralleleVersion==3){
 			printf("Décomposition bi-dimensionnelle version\n");
 			start_time = clock();
 			paralelleMult2( numberOfTreds);
 			end_time = clock();
 		}
-		if(paralleleVersion=4){
+		if(paralleleVersion==4){
 			printf("Décomposition bi-dimensionnelle version\n");
 			start_time = clock();
 			paralelleMult2( numberOfTreds);
